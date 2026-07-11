@@ -1,14 +1,14 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 
-namespace NpcNotebook
+namespace NpcNotebook;
+
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    protected override void OnStartup(StartupEventArgs e)
     {
+        base.OnStartup(e);
+        var window = new Views.MainWindow();
+        MainWindow = window;
+        window.Show();
     }
-
 }
