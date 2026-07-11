@@ -84,8 +84,6 @@ public partial class MainWindow : Window
 
     private void Save_Click(object sender, RoutedEventArgs e) => TrySave(showSaveDialogIfNeeded: true);
 
-    private void SaveAs_Click(object sender, RoutedEventArgs e) => SaveAs();
-
     private bool TrySave(bool showSaveDialogIfNeeded)
     {
         var session = NotebookSession.Current;

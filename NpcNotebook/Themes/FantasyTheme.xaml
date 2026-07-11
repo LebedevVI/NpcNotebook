@@ -556,4 +556,72 @@
     <Style TargetType="ListBox" BasedOn="{StaticResource FantasyListBox}"/>
     <Style TargetType="ListBoxItem" BasedOn="{StaticResource FantasyListBoxItem}"/>
 
+    <Style x:Key="FantasyTabControl" TargetType="TabControl">
+        <Setter Property="Background" Value="{StaticResource InputParchmentBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource LeatherBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Padding" Value="4"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabControl">
+                    <Grid KeyboardNavigation.TabNavigation="Local">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0"
+                                Background="{StaticResource ParchmentMidBrush}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1,1,1,0"
+                                CornerRadius="3,3,0,0"
+                                Padding="4,4,4,0">
+                            <TabPanel IsItemsHost="True"/>
+                        </Border>
+                        <Border Grid.Row="1"
+                                Background="{StaticResource InputParchmentBrush}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="0,0,3,3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter ContentSource="SelectedContent"/>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FantasyTabItem" TargetType="TabItem">
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource FantasyBodyFont}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="Margin" Value="0,0,2,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border x:Name="tabBorder"
+                            Background="{StaticResource ParchmentMidBrush}"
+                            BorderBrush="{StaticResource LeatherBrush}"
+                            BorderThickness="1"
+                            CornerRadius="3,3,0,0"
+                            Padding="{TemplateBinding Padding}"
+                            Margin="{TemplateBinding Margin}">
+                        <ContentPresenter ContentSource="Header" HorizontalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="tabBorder" Property="Background" Value="{StaticResource InputParchmentBrush}"/>
+                            <Setter TargetName="tabBorder" Property="BorderBrush" Value="{StaticResource GoldBrush}"/>
+                            <Setter TargetName="tabBorder" Property="BorderThickness" Value="2,2,2,0"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="tabBorder" Property="Background" Value="#F0E0B8"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

@@ -13,6 +13,8 @@
         <conv:NpcSelectionBorderConverter x:Key="NpcSelectionBorderConverter"/>
         <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <conv:InverseNullToVisibilityConverter x:Key="InverseNullToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <conv:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
 
         <Style x:Key="SingleLineTextBox" TargetType="TextBox" BasedOn="{StaticResource FantasyTextBox}">
             <Setter Property="AcceptsReturn" Value="False"/>
@@ -67,9 +69,7 @@
                     <Button Content="Открыть" Style="{StaticResource FantasyCompactButton}"
                             ToolTip="Открыть блокнот (.npcbook)" Click="Open_Click"/>
                     <Button Content="Сохранить" Style="{StaticResource FantasyCompactButton}"
-                            ToolTip="Сохранить блокнот" Click="Save_Click"/>
-                    <Button Content="Сохранить как" Style="{StaticResource FantasyCompactButton}"
-                            ToolTip="Сохранить под новым именем" Click="SaveAs_Click"/>
+                            ToolTip="Сохранить блокнот (.npcbook)" Click="Save_Click"/>
                 </StackPanel>
 
                 <TextBox Grid.Column="1" Margin="12,0"
@@ -96,9 +96,9 @@
 
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="320" MinWidth="260"/>
-                <ColumnDefinition Width="8"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="320" MinWidth="220"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" MinWidth="360"/>
             </Grid.ColumnDefinitions>
 
             <!-- Список групп -->
@@ -170,100 +170,96 @@
                 </DockPanel>
             </Border>
 
-            <GridSplitter Grid.Column="1" Width="8" HorizontalAlignment="Stretch"
+            <GridSplitter Grid.Column="1" Width="8"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch"
+                          ShowsPreview="True"
                           Background="Transparent"/>
 
             <!-- Карточка персонажа -->
-            <Border Grid.Column="2" Style="{StaticResource FantasyPanel}">
+            <Border Grid.Column="2" Style="{StaticResource FantasyPanel}" Padding="8">
                 <Grid>
                     <Grid Visibility="{Binding SelectedCharacter, Converter={StaticResource NullToVisibilityConverter}}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Grid Grid.Row="0" Margin="0,0,0,12">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0" Margin="0,0,16,0">
-                            <Border Width="120" Height="120" CornerRadius="6"
-                                    BorderBrush="{StaticResource LeatherBrush}" BorderThickness="2"
-                                    Background="#55E8D4A8" Cursor="Hand"
-                                    MouseLeftButtonUp="Portrait_Click">
-                                <Grid>
-                                    <TextBlock Text="?" FontSize="36" FontWeight="Bold"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                                               Foreground="{StaticResource LeatherBrush}"/>
-                                    <Image Source="{Binding SelectedCharacter, Converter={StaticResource PortraitConverter}}"
-                                           Stretch="UniformToFill"
-                                           RenderOptions.BitmapScalingMode="HighQuality">
-                                        <Image.Clip>
-                                            <RectangleGeometry RadiusX="4" RadiusY="4" Rect="0,0,120,120"/>
-                                        </Image.Clip>
-                                    </Image>
-                                </Grid>
-                            </Border>
-                            <Button Content="Загрузить портрет" Style="{StaticResource FantasyCompactButton}"
-                                    Margin="0,8,0,0" Command="{Binding ChoosePortraitCommand}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="Имя" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                            <TextBox Style="{StaticResource SingleLineTextBox}"
-                                     Text="{Binding SelectedCharacter.Name, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Grid Margin="0,8,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="8"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="Раса" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                                    <TextBox Style="{StaticResource SingleLineTextBox}"
-                                             Text="{Binding SelectedCharacter.Race, UpdateSourceTrigger=PropertyChanged}"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="2">
-                                    <TextBlock Text="Возраст" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                                    <TextBox Style="{StaticResource SingleLineTextBox}"
-                                             Text="{Binding SelectedCharacter.Age, UpdateSourceTrigger=PropertyChanged}"/>
-                                </StackPanel>
-                            </Grid>
-                            <TextBlock Text="Род деятельности" FontWeight="SemiBold" Margin="0,8,0,4"/>
-                            <TextBox Style="{StaticResource SingleLineTextBox}"
-                                     Text="{Binding SelectedCharacter.Occupation, UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBlock Text="Характер" FontWeight="SemiBold" Margin="0,8,0,4"/>
-                            <TextBox MinHeight="72" MaxHeight="120"
-                                     Text="{Binding SelectedCharacter.Personality, UpdateSourceTrigger=PropertyChanged}"/>
-                        </StackPanel>
-                    </Grid>
-
-                    <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*" MinHeight="160"/>
+                            <RowDefinition Height="8"/>
+                            <RowDefinition Height="1.2*" MinHeight="180"/>
                         </Grid.RowDefinitions>
 
-                        <Border Grid.Row="0" Style="{StaticResource FantasyCompactPanel}" Margin="0,0,0,8" Padding="8">
-                            <DockPanel LastChildFill="False">
-                                <TextBlock DockPanel.Dock="Left" Text="Отношения" FontWeight="Bold"
-                                           VerticalAlignment="Center" Margin="0,0,12,0"/>
-                                <Button DockPanel.Dock="Right" Content="+ Добавить"
-                                        Style="{StaticResource FantasyCompactButton}"
-                                        Command="{Binding AddRelationshipCommand}"/>
-                            </DockPanel>
-                        </Border>
+                        <!-- Верх: поля и отношения (с прокруткой) -->
+                        <ScrollViewer Grid.Row="0"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      Padding="0,0,4,0">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Row="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                        <Border Width="120" Height="120" CornerRadius="6"
+                                                BorderBrush="{StaticResource LeatherBrush}" BorderThickness="2"
+                                                Background="#55E8D4A8" Cursor="Hand"
+                                                MouseLeftButtonUp="Portrait_Click">
+                                            <Grid>
+                                                <TextBlock Text="?" FontSize="36" FontWeight="Bold"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Foreground="{StaticResource LeatherBrush}"/>
+                                                <Image Source="{Binding SelectedCharacter, Converter={StaticResource PortraitConverter}}"
+                                                       Stretch="UniformToFill"
+                                                       RenderOptions.BitmapScalingMode="HighQuality">
+                                                    <Image.Clip>
+                                                        <RectangleGeometry RadiusX="4" RadiusY="4" Rect="0,0,120,120"/>
+                                                    </Image.Clip>
+                                                </Image>
+                                            </Grid>
+                                        </Border>
+                                        <Button Content="Загрузить портрет" Style="{StaticResource FantasyCompactButton}"
+                                                Margin="0,8,0,0" Command="{Binding ChoosePortraitCommand}"/>
+                                    </StackPanel>
 
-                            <ScrollViewer Grid.Row="0" MaxHeight="140" VerticalScrollBarVisibility="Auto"
-                                          Margin="0,0,0,8">
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="Имя" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                        <TextBox Style="{StaticResource SingleLineTextBox}"
+                                                 Text="{Binding SelectedCharacter.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Grid Margin="0,8,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="8"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Раса" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                                <TextBox Style="{StaticResource SingleLineTextBox}"
+                                                         Text="{Binding SelectedCharacter.Race, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Возраст" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                                <TextBox Style="{StaticResource SingleLineTextBox}"
+                                                         Text="{Binding SelectedCharacter.Age, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock Text="Род деятельности" FontWeight="SemiBold" Margin="0,8,0,4"/>
+                                        <TextBox Style="{StaticResource SingleLineTextBox}"
+                                                 Text="{Binding SelectedCharacter.Occupation, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock Text="Характер" FontWeight="SemiBold" Margin="0,8,0,4"/>
+                                        <TextBox MinHeight="72" MaxHeight="160"
+                                                 Text="{Binding SelectedCharacter.Personality, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Border Style="{StaticResource FantasyCompactPanel}" Margin="0,0,0,8" Padding="8">
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock DockPanel.Dock="Left" Text="Отношения" FontWeight="Bold"
+                                                   VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                        <Button DockPanel.Dock="Right" Content="+ Добавить"
+                                                Style="{StaticResource FantasyCompactButton}"
+                                                Command="{Binding AddRelationshipCommand}"/>
+                                    </DockPanel>
+                                </Border>
+
                                 <ItemsControl ItemsSource="{Binding SelectedCharacter.Relationships}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type models:NpcRelationship}">
@@ -272,7 +268,7 @@
                                                     Background="#33E8D4A8">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="180"/>
+                                                        <ColumnDefinition Width="180" MinWidth="120"/>
                                                         <ColumnDefinition Width="8"/>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
@@ -295,27 +291,52 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                            </ScrollViewer>
+                            </StackPanel>
+                        </ScrollViewer>
 
-                            <DockPanel Grid.Row="1">
-                                <Border DockPanel.Dock="Top" Style="{StaticResource FantasyCompactPanel}"
-                                        Margin="0,0,0,4" Padding="6">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Диалоги и реплики" FontWeight="Bold"
-                                                   VerticalAlignment="Center" Margin="0,0,12,0"/>
-                                        <Button Content="+ Вкладка" Style="{StaticResource FantasyCompactButton}"
-                                                Command="{Binding AddDialogTabCommand}"/>
-                                        <Button Content="Переименовать" Style="{StaticResource FantasyCompactButton}"
-                                                Command="{Binding RenameDialogTabCommand}"
-                                                CommandParameter="{Binding SelectedDialogTab}"/>
-                                        <Button Content="Удалить" Style="{StaticResource FantasyCompactButton}"
-                                                Command="{Binding RemoveDialogTabCommand}"
-                                                CommandParameter="{Binding SelectedDialogTab}"/>
-                                    </StackPanel>
+                        <GridSplitter Grid.Row="1" Height="8"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Center"
+                                      ShowsPreview="True"
+                                      Background="Transparent"/>
+
+                        <!-- Низ: диалоги (масштабируемая область) -->
+                        <DockPanel Grid.Row="2" LastChildFill="True">
+                            <Border DockPanel.Dock="Top" Style="{StaticResource FantasyCompactPanel}"
+                                    Margin="0,0,0,4" Padding="6">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Диалоги и реплики" FontWeight="Bold"
+                                               VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                    <Button Content="+ Вкладка" Style="{StaticResource FantasyCompactButton}"
+                                            Command="{Binding AddDialogTabCommand}"/>
+                                    <Button Content="Переименовать" Style="{StaticResource FantasyCompactButton}"
+                                            Command="{Binding RenameDialogTabCommand}"
+                                            CommandParameter="{Binding SelectedDialogTab}"/>
+                                    <Button Content="Удалить" Style="{StaticResource FantasyCompactButton}"
+                                            Command="{Binding RemoveDialogTabCommand}"
+                                            CommandParameter="{Binding SelectedDialogTab}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Grid>
+                                <Border BorderBrush="{StaticResource LeatherBrush}"
+                                        BorderThickness="2"
+                                        CornerRadius="3"
+                                        Background="{StaticResource InputParchmentBrush}"
+                                        Visibility="{Binding HasDialogTabs, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                                    <TextBlock Text="Нажмите «+ Вкладка», чтобы добавить реплики и диалоги"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Opacity="0.65"
+                                               FontStyle="Italic"
+                                               Margin="16"/>
                                 </Border>
 
-                                <TabControl ItemsSource="{Binding SelectedCharacter.DialogTabs}"
-                                            SelectedItem="{Binding SelectedDialogTab}">
+                                <TabControl Style="{StaticResource FantasyTabControl}"
+                                            ItemContainerStyle="{StaticResource FantasyTabItem}"
+                                            ItemsSource="{Binding SelectedCharacter.DialogTabs}"
+                                            SelectedItem="{Binding SelectedDialogTab}"
+                                            Visibility="{Binding HasDialogTabs, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <TabControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type models:NpcDialogTab}">
                                             <TextBlock Text="{Binding Title}" MouseLeftButtonDown="DialogTabHeader_Click"/>
@@ -324,15 +345,16 @@
                                     <TabControl.ContentTemplate>
                                         <DataTemplate DataType="{x:Type models:NpcDialogTab}">
                                             <TextBox Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"
-                                                     AcceptsReturn="True" MinHeight="160"
-                                                     VerticalScrollBarVisibility="Auto"/>
+                                                     AcceptsReturn="True"
+                                                     VerticalScrollBarVisibility="Auto"
+                                                     BorderThickness="0"
+                                                     Background="Transparent"/>
                                         </DataTemplate>
                                     </TabControl.ContentTemplate>
                                 </TabControl>
-                            </DockPanel>
-                        </Grid>
+                            </Grid>
+                        </DockPanel>
                     </Grid>
-                </Grid>
 
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
                                 Visibility="{Binding SelectedCharacter, Converter={StaticResource InverseNullToVisibilityConverter}}">

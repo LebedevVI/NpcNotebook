@@ -35,6 +35,7 @@ public partial class GroupSectionViewModel : ObservableObject
 public partial class MainViewModel : ObservableObject
 {
     private readonly NotebookSession _session = NotebookSession.Current;
+    private NpcCharacter? _dialogTabsSubscriptionCharacter;
 
     [ObservableProperty]
     private NpcCharacter? _selectedCharacter;
@@ -51,6 +52,8 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<GroupSectionViewModel> GroupSections { get; } = [];
 
     public ObservableCollection<NpcCharacter> RelationshipTargets { get; } = [];
+
+    public bool HasDialogTabs => SelectedCharacter is { DialogTabs.Count: > 0 };
 
     public string WindowTitle
     {
@@ -80,12 +83,23 @@ public partial class MainViewModel : ObservableObject
 
     partial void OnSelectedCharacterChanged(NpcCharacter? value)
     {
+        if (_dialogTabsSubscriptionCharacter is not null)
+            _dialogTabsSubscriptionCharacter.DialogTabs.CollectionChanged -= OnDialogTabsChanged;
+
+        _dialogTabsSubscriptionCharacter = value;
+        if (value is not null)
+            value.DialogTabs.CollectionChanged += OnDialogTabsChanged;
+
         RefreshRelationshipTargets();
         SelectedDialogTab = value?.DialogTabs.FirstOrDefault();
+        OnPropertyChanged(nameof(HasDialogTabs));
         StatusText = value is null
             ? "Выберите персонажа в списке слева."
             : $"Карточка: {value.Name}";
     }
+
+    private void OnDialogTabsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) =>
+        OnPropertyChanged(nameof(HasDialogTabs));
 
     public void RefreshSections()
     {

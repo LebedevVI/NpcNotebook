@@ -64,14 +64,12 @@ public sealed class InverseNullToVisibilityConverter : IValueConverter
         => throw new NotSupportedException();
 }
 
-public sealed class NpcNameConverter : IValueConverter
+public sealed class InverseBooleanToVisibilityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is Guid id)
-            return Services.NotebookSession.Current.GetCharacterName(id);
-
-        return "";
+        var visible = value is true;
+        return visible ? Visibility.Collapsed : Visibility.Visible;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
