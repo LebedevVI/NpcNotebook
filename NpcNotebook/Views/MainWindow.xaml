@@ -69,7 +69,7 @@
                     <Button Content="Открыть" Style="{StaticResource FantasyCompactButton}"
                             ToolTip="Открыть блокнот (.npcbook)" Click="Open_Click"/>
                     <Button Content="Сохранить" Style="{StaticResource FantasyCompactButton}"
-                            ToolTip="Сохранить блокнот (.npcbook)" Click="Save_Click"/>
+                            ToolTip="Сохранить блокнот — выбрать файл (.npcbook)" Click="Save_Click"/>
                 </StackPanel>
 
                 <TextBox Grid.Column="1" Margin="12,0"

@@ -1,6 +1,7 @@
 using System.IO;
 using System.IO.Compression;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using NpcNotebook.Models.Persistence;
@@ -95,8 +96,11 @@ public static class NotebookPersistenceService
     private static void WriteJson(ZipArchive archive, NotebookSaveData data)
     {
         var entry = archive.CreateEntry(NotebookFileFormat.DataEntryName, CompressionLevel.Optimal);
-        using var stream = entry.Open();
-        JsonSerializer.Serialize(stream, data, JsonOptions);
+        using var entryStream = entry.Open();
+        using var buffer = new MemoryStream();
+        JsonSerializer.Serialize(buffer, data, JsonOptions);
+        buffer.Position = 0;
+        buffer.CopyTo(entryStream);
     }
 
     private static void WritePortraits(ZipArchive archive, NotebookSession session)
@@ -107,8 +111,11 @@ public static class NotebookPersistenceService
                 NotebookFileFormat.PortraitsFolder + fileName,
                 CompressionLevel.Optimal);
 
-            using var stream = entry.Open();
-            SaveBitmap(image, stream, Path.GetExtension(fileName));
+            using var entryStream = entry.Open();
+            using var buffer = new MemoryStream();
+            SaveBitmap(image, buffer, Path.GetExtension(fileName));
+            buffer.Position = 0;
+            buffer.CopyTo(entryStream);
         }
     }
 
@@ -117,7 +124,6 @@ public static class NotebookPersistenceService
         BitmapEncoder encoder = extension.ToLowerInvariant() switch
         {
             ".jpg" or ".jpeg" => new JpegBitmapEncoder(),
-            ".webp" => new PngBitmapEncoder(),
             _ => new PngBitmapEncoder()
         };
 
@@ -128,14 +134,34 @@ public static class NotebookPersistenceService
 
     private static BitmapSource ToEncodableBitmap(BitmapSource source)
     {
-        if (source.CanFreeze && source.Format == PixelFormats.Pbgra32)
+        try
         {
-            source.Freeze();
-            return source;
+            var converted = new FormatConvertedBitmap(source, PixelFormats.Pbgra32, null, 0);
+            converted.Freeze();
+            var copy = new WriteableBitmap(converted);
+            copy.Freeze();
+            return copy;
         }
+        catch (NotSupportedException)
+        {
+            return RenderToBitmap(source);
+        }
+    }
 
-        var converted = new FormatConvertedBitmap(source, PixelFormats.Pbgra32, null, 0);
-        converted.Freeze();
-        return converted;
+    private static BitmapSource RenderToBitmap(BitmapSource source)
+    {
+        var width = source.PixelWidth;
+        var height = source.PixelHeight;
+        var dpiX = source.DpiX > 0 ? source.DpiX : 96;
+        var dpiY = source.DpiY > 0 ? source.DpiY : 96;
+
+        var visual = new DrawingVisual();
+        using (var context = visual.RenderOpen())
+            context.DrawImage(source, new Rect(0, 0, width, height));
+
+        var target = new RenderTargetBitmap(width, height, dpiX, dpiY, PixelFormats.Pbgra32);
+        target.Render(visual);
+        target.Freeze();
+        return target;
     }
 }

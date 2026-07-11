@@ -82,7 +82,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void Save_Click(object sender, RoutedEventArgs e) => TrySave(showSaveDialogIfNeeded: true);
+    private void Save_Click(object sender, RoutedEventArgs e) => SaveWithDialog();
 
     private bool TrySave(bool showSaveDialogIfNeeded)
     {
@@ -91,7 +91,7 @@ public partial class MainWindow : Window
         {
             if (!showSaveDialogIfNeeded)
                 return false;
-            return SaveAs();
+            return SaveWithDialog();
         }
 
         try
@@ -107,23 +107,31 @@ public partial class MainWindow : Window
         }
     }
 
-    private bool SaveAs()
+    private bool SaveWithDialog()
     {
+        var session = NotebookSession.Current;
         var dialog = new SaveFileDialog
         {
             Filter = $"Блокнот NPC (*{NotebookFileFormat.Extension})|*{NotebookFileFormat.Extension}",
             Title = "Сохранить блокнот",
-            FileName = string.IsNullOrEmpty(NotebookSession.Current.CurrentFilePath)
+            FileName = string.IsNullOrEmpty(session.CurrentFilePath)
                 ? "campaign.npcbook"
-                : Path.GetFileName(NotebookSession.Current.CurrentFilePath)
+                : Path.GetFileName(session.CurrentFilePath)
         };
+
+        if (!string.IsNullOrEmpty(session.CurrentFilePath))
+        {
+            var directory = Path.GetDirectoryName(session.CurrentFilePath);
+            if (!string.IsNullOrEmpty(directory) && Directory.Exists(directory))
+                dialog.InitialDirectory = directory;
+        }
 
         if (dialog.ShowDialog() != true)
             return false;
 
         try
         {
-            NotebookPersistenceService.Save(NotebookSession.Current, dialog.FileName);
+            NotebookPersistenceService.Save(session, dialog.FileName);
             _viewModel.StatusText = $"Сохранено: {Path.GetFileName(dialog.FileName)}.";
             return true;
         }
