@@ -624,4 +624,46 @@
         </Setter>
     </Style>
 
+    <Style x:Key="FantasySlider" TargetType="Slider">
+        <Setter Property="Foreground" Value="{StaticResource LeatherBrush}"/>
+        <Setter Property="Background" Value="{StaticResource ParchmentMidBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource LeatherBrush}"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid VerticalAlignment="Center">
+                        <Border Height="6"
+                                Margin="6,0"
+                                Background="{StaticResource InputParchmentBrush}"
+                                BorderBrush="{StaticResource LeatherBrush}"
+                                BorderThickness="1"
+                                CornerRadius="3"
+                                VerticalAlignment="Center"/>
+                        <Track x:Name="PART_Track">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="Slider.DecreaseLarge" Opacity="0" Focusable="False"/>
+                            </Track.DecreaseRepeatButton>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="Slider.IncreaseLarge" Opacity="0" Focusable="False"/>
+                            </Track.IncreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Width="16" Height="22" Cursor="Hand">
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border Background="{StaticResource LeatherButtonBrush}"
+                                                    BorderBrush="{StaticResource LeatherBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="3"/>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

@@ -19,7 +19,8 @@
         <Style x:Key="SingleLineTextBox" TargetType="TextBox" BasedOn="{StaticResource FantasyTextBox}">
             <Setter Property="AcceptsReturn" Value="False"/>
             <Setter Property="TextWrapping" Value="NoWrap"/>
-            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="Padding" Value="6,4"/>
             <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
         </Style>
 
@@ -221,31 +222,83 @@
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="1">
-                                        <TextBlock Text="Имя" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                        <TextBlock Text="Имя" FontWeight="SemiBold" Margin="0,0,0,2"/>
                                         <TextBox Style="{StaticResource SingleLineTextBox}"
                                                  Text="{Binding SelectedCharacter.Name, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <Grid Margin="0,8,0,0">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="8"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <TextBlock Text="Раса" FontWeight="SemiBold" Margin="0,0,0,4"/>
+
+                                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                                            <StackPanel Margin="0,0,6,0">
+                                                <TextBlock Text="Раса" FontWeight="SemiBold" Margin="0,0,0,2"/>
                                                 <TextBox Style="{StaticResource SingleLineTextBox}"
                                                          Text="{Binding SelectedCharacter.Race, UpdateSourceTrigger=PropertyChanged}"/>
                                             </StackPanel>
-                                            <StackPanel Grid.Column="2">
-                                                <TextBlock Text="Возраст" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                            <StackPanel Margin="6,0,0,0">
+                                                <TextBlock Text="Возраст" FontWeight="SemiBold" Margin="0,0,0,2"/>
                                                 <TextBox Style="{StaticResource SingleLineTextBox}"
                                                          Text="{Binding SelectedCharacter.Age, UpdateSourceTrigger=PropertyChanged}"/>
                                             </StackPanel>
-                                        </Grid>
-                                        <TextBlock Text="Род деятельности" FontWeight="SemiBold" Margin="0,8,0,4"/>
+                                        </UniformGrid>
+
+                                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                                            <StackPanel Margin="0,0,6,0">
+                                                <TextBlock Text="Голос" FontWeight="SemiBold" Margin="0,0,0,2"/>
+                                                <TextBox Style="{StaticResource SingleLineTextBox}"
+                                                         Text="{Binding SelectedCharacter.Voice, UpdateSourceTrigger=PropertyChanged}"
+                                                         ToolTip="Тембр, акцент, манера речи"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="6,0,0,0">
+                                                <TextBlock Text="Характерные приметы" FontWeight="SemiBold" Margin="0,0,0,2"/>
+                                                <TextBox Style="{StaticResource SingleLineTextBox}"
+                                                         Text="{Binding SelectedCharacter.DistinguishingFeatures, UpdateSourceTrigger=PropertyChanged}"
+                                                         ToolTip="Шрам, кольцо, привычка — то, по чему узнают"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+
+                                        <TextBlock Text="Род деятельности" FontWeight="SemiBold" Margin="0,6,0,2"/>
                                         <TextBox Style="{StaticResource SingleLineTextBox}"
                                                  Text="{Binding SelectedCharacter.Occupation, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <TextBlock Text="Характер" FontWeight="SemiBold" Margin="0,8,0,4"/>
-                                        <TextBox MinHeight="72" MaxHeight="160"
+
+                                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                                            <StackPanel Margin="0,0,6,0">
+                                                <TextBlock Text="Цель" FontWeight="SemiBold" Margin="0,0,0,2"/>
+                                                <TextBox Style="{StaticResource SingleLineTextBox}"
+                                                         Text="{Binding SelectedCharacter.Goal, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="6,0,0,0">
+                                                <TextBlock Text="Страх" FontWeight="SemiBold" Margin="0,0,0,2"/>
+                                                <TextBox Style="{StaticResource SingleLineTextBox}"
+                                                         Text="{Binding SelectedCharacter.Fear, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+
+                                        <TextBlock Text="Секрет" FontWeight="SemiBold" Margin="0,6,0,2"/>
+                                        <TextBox Style="{StaticResource SingleLineTextBox}"
+                                                 Text="{Binding SelectedCharacter.Secret, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <TextBlock Text="Отношение к группе" FontWeight="SemiBold" Margin="0,6,0,2"
+                                                   ToolTip="От −100 (враждебность) до 100 (дружелюбие)"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="64"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Slider Grid.Column="0"
+                                                    Style="{StaticResource FantasySlider}"
+                                                    Minimum="-100" Maximum="100"
+                                                    TickFrequency="1"
+                                                    IsSnapToTickEnabled="True"
+                                                    VerticalAlignment="Center"
+                                                    Margin="0,0,8,0"
+                                                    Value="{Binding SelectedCharacter.PartyAttitude, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBox Grid.Column="1"
+                                                     Style="{StaticResource SingleLineTextBox}"
+                                                     TextAlignment="Center"
+                                                     ToolTip="Целое число от −100 до 100"
+                                                     Text="{Binding SelectedCharacter.PartyAttitude, UpdateSourceTrigger=LostFocus}"/>
+                                        </Grid>
+
+                                        <TextBlock Text="Характер" FontWeight="SemiBold" Margin="0,6,0,2"/>
+                                        <TextBox MinHeight="48" MaxHeight="96"
                                                  Text="{Binding SelectedCharacter.Personality, UpdateSourceTrigger=PropertyChanged}"/>
                                     </StackPanel>
                                 </Grid>

@@ -22,7 +22,13 @@ public sealed class NpcCharacterDto
     public string Name { get; init; } = "";
     public string? Race { get; init; }
     public string? Age { get; init; }
+    public string? Voice { get; init; }
+    public string? DistinguishingFeatures { get; init; }
     public string? Occupation { get; init; }
+    public string? Goal { get; init; }
+    public string? Fear { get; init; }
+    public string? Secret { get; init; }
+    public int PartyAttitude { get; init; }
     public string? Personality { get; init; }
     public string? PortraitFileName { get; init; }
     public List<Guid> GroupIds { get; init; } = [];

@@ -17,7 +17,25 @@ public partial class NpcCharacter : ObservableObject
     private string? _age;
 
     [ObservableProperty]
+    private string? _voice;
+
+    [ObservableProperty]
+    private string? _distinguishingFeatures;
+
+    [ObservableProperty]
     private string? _occupation;
+
+    [ObservableProperty]
+    private string? _goal;
+
+    [ObservableProperty]
+    private string? _fear;
+
+    [ObservableProperty]
+    private string? _secret;
+
+    [ObservableProperty]
+    private int _partyAttitude;
 
     [ObservableProperty]
     private string? _personality;
@@ -30,4 +48,11 @@ public partial class NpcCharacter : ObservableObject
     public ObservableCollection<NpcRelationship> Relationships { get; } = [];
 
     public ObservableCollection<NpcDialogTab> DialogTabs { get; } = [];
+
+    partial void OnPartyAttitudeChanged(int value)
+    {
+        var clamped = Math.Clamp(value, -100, 100);
+        if (clamped != value)
+            PartyAttitude = clamped;
+    }
 }
