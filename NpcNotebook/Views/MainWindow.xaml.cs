@@ -148,6 +148,12 @@ public partial class MainWindow : Window
         help.ShowDialog();
     }
 
+    private void About_Click(object sender, RoutedEventArgs e)
+    {
+        var about = new AboutWindow { Owner = this };
+        about.ShowDialog();
+    }
+
     private void Portrait_Click(object sender, MouseButtonEventArgs e)
     {
         if (_viewModel.ChoosePortraitCommand.CanExecute(null))

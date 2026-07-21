@@ -92,7 +92,22 @@
         </Border>
 
         <Border DockPanel.Dock="Bottom" Style="{StaticResource FantasyCompactPanel}" Margin="4,2,4,4" Padding="8,6">
-            <TextBlock Text="{Binding StatusText}" FontSize="12" TextWrapping="Wrap"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding StatusText}" FontSize="12" TextWrapping="Wrap"
+                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="11">
+                    <Hyperlink Click="About_Click"
+                               Foreground="{StaticResource GoldBrush}"
+                               TextDecorations="None"
+                               ToolTip="О программе">
+                        О программе
+                    </Hyperlink>
+                </TextBlock>
+            </Grid>
         </Border>
 
         <Grid Margin="4">
